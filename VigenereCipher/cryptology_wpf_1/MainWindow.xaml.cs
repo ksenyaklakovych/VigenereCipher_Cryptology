@@ -22,17 +22,11 @@ using Microsoft.Win32;
 
 namespace cryptology_wpf_1
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         string currentFileName;
         const string uaAlphabet = "абвгґдеєжзиіїклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
         const string enAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,!?():;";
-        int A;
-        int B;
-        int C = -1;
         public MainWindow()
         {
             InitializeComponent();
@@ -50,19 +44,18 @@ namespace cryptology_wpf_1
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
             string firstText = rawTextBox.Text.ToString();
-            Direction dir = Direction.Right;
             string result = "";
 
             if ((bool)englishCheckBox.IsChecked)
             {
                 const string defaultAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-                result = Vigenere(firstText.ToUpper(), keyFieldSlogan.Text.ToUpper(), defaultAlphabet).ToLower();
+                result = Vigenere(firstText, keyFieldSlogan.Text, defaultAlphabet);
             }
             else
             {
                 const string defaultAlphabet = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
-                result = Vigenere(firstText.ToUpper(), keyFieldSlogan.Text.ToUpper(), defaultAlphabet).ToLower();
+                result = Vigenere(firstText, keyFieldSlogan.Text, defaultAlphabet);
             }
             finalTextBox.Text = result;
         }
@@ -80,19 +73,18 @@ namespace cryptology_wpf_1
         private void DecryptButton_Click(object sender, RoutedEventArgs e)
         {
             string firstText = rawTextBox.Text.ToString();
-            Direction dir = Direction.Right;
             string result;
 
             if ((bool)englishCheckBox.IsChecked)
             {
                 const string defaultAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                result = Vigenere(firstText.ToUpper(), keyFieldSlogan.Text.ToUpper(), defaultAlphabet, false).ToLower();
+                result = Vigenere(firstText, keyFieldSlogan.Text, defaultAlphabet, false);
 
             }
             else
             {
                 const string defaultAlphabet = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
-                result = Vigenere(firstText.ToUpper(), keyFieldSlogan.Text.ToUpper(), defaultAlphabet, false).ToLower();
+                result = Vigenere(firstText, keyFieldSlogan.Text, defaultAlphabet, false);
             }
             finalTextBox.Text = result;
         }
@@ -152,7 +144,7 @@ namespace cryptology_wpf_1
         }
         private string Vigenere(string text, string password, string alph, bool encrypting = true)
         {
-            string letters = alph;
+            string letters = alph.ToLower()+alph+".,:?!()-_; ";
 
             var gamma = GetRepeatKey(password, text.Length);
             var retValue = "";
